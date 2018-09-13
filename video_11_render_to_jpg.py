@@ -13,7 +13,7 @@ def window_resize(window, width, height):
 
 cam = Camera()
 keys = [False] * 1024
-w_width, w_height = 1920, 1080
+w_width, w_height = 1924, 1024
 lastX, lastY = w_width / 2, w_height / 2
 first_mouse = True
 filename = "test_1.jpg"
@@ -22,15 +22,15 @@ filename = "test_1.jpg"
 def render_to_jpg(format="JPEG"):
     from PIL import Image
     global filename
-    os.chdir(r"D:\Python_PyOpenGL_Pyglet\PyOpenGL_s02\renders")
-    for file in os.listdir(os.curdir):
-        if file == filename:
-            name, ext = file.split(".")
-            word, number = name.split("_")
-            new_num = int(number) + 1
-            filename = word + "_" + str(new_num) + "." + ext
-        else:
-            continue
+    #os.chdir(r"D:\Python_PyOpenGL_Pyglet\PyOpenGL_s02\renders")
+    #for file in os.listdir(os.curdir):
+    #    if file == filename:
+    #        name, ext = file.split(".")
+    #        word, number = name.split("_")
+    #        new_num = int(number) + 1
+    #        filename = word + "_" + str(new_num) + "." + ext
+    #    else:
+    #        continue
 
     x, y, width, height = glGetDoublev(GL_VIEWPORT)
     width, height = int(width), int(height)
@@ -97,10 +97,10 @@ def main():
         return
 
     glfw.make_context_current(window)
-    glfw.set_window_size_callback(window, window_resize)
-    glfw.set_key_callback(window, key_callback)
-    glfw.set_cursor_pos_callback(window, mouse_callback)
-    glfw.set_input_mode(window, glfw.CURSOR, glfw.CURSOR_DISABLED)
+    #glfw.set_window_size_callback(window, window_resize)
+    #glfw.set_key_callback(window, key_callback)
+    #glfw.set_cursor_pos_callback(window, mouse_callback)
+    #glfw.set_input_mode(window, glfw.CURSOR, glfw.CURSOR_DISABLED)
 
     cube = ObjLoader()
     cube.load_model("res/cube/cube.obj")
@@ -173,37 +173,38 @@ def main():
 
     glUniformMatrix4fv(proj_loc, 1, GL_FALSE, projection)
 
-    while not glfw.window_should_close(window):
-        glfw.poll_events()
-        do_movement()
+    #while not glfw.window_should_close(window):
+    #glfw.poll_events()
+    #do_movement()
 
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
-        view = cam.get_view_matrix()
-        glUniformMatrix4fv(view_loc, 1, GL_FALSE, view)
+    view = cam.get_view_matrix()
+    glUniformMatrix4fv(view_loc, 1, GL_FALSE, view)
 
-        rot_y = Matrix44.from_y_rotation(glfw.get_time() * 0.5)
+    rot_y = Matrix44.from_y_rotation(glfw.get_time() * 0.5)
 
-        glBindVertexArray(cube_vao)
-        glBindTexture(GL_TEXTURE_2D, cube_tex)
-        glUniformMatrix4fv(model_loc, 1, GL_FALSE, rot_y * cube_model)
-        glDrawArrays(GL_TRIANGLES, 0, len(cube.vertex_index))
-        glBindVertexArray(0)
+    glBindVertexArray(cube_vao)
+    glBindTexture(GL_TEXTURE_2D, cube_tex)
+    glUniformMatrix4fv(model_loc, 1, GL_FALSE, rot_y * cube_model)
+    glDrawArrays(GL_TRIANGLES, 0, len(cube.vertex_index))
+    glBindVertexArray(0)
 
-        glBindVertexArray(monkey_vao)
-        glBindTexture(GL_TEXTURE_2D, monkey_tex)
-        glUniformMatrix4fv(model_loc, 1, GL_FALSE, monkey_model)
-        glDrawArrays(GL_TRIANGLES, 0, len(monkey.vertex_index))
-        glBindVertexArray(0)
+    glBindVertexArray(monkey_vao)
+    glBindTexture(GL_TEXTURE_2D, monkey_tex)
+    glUniformMatrix4fv(model_loc, 1, GL_FALSE, monkey_model)
+    glDrawArrays(GL_TRIANGLES, 0, len(monkey.vertex_index))
+    glBindVertexArray(0)
 
-        glBindVertexArray(monster_vao)
-        glBindTexture(GL_TEXTURE_2D, monster_tex)
-        glUniformMatrix4fv(model_loc, 1, GL_FALSE, monster_model)
-        glDrawArrays(GL_TRIANGLES, 0, len(monster.vertex_index))
-        glBindVertexArray(0)
+    glBindVertexArray(monster_vao)
+    glBindTexture(GL_TEXTURE_2D, monster_tex)
+    glUniformMatrix4fv(model_loc, 1, GL_FALSE, monster_model)
+    glDrawArrays(GL_TRIANGLES, 0, len(monster.vertex_index))
+    glBindVertexArray(0)
 
-        glfw.swap_buffers(window)
-
+    glfw.swap_buffers(window)
+    
+    render_to_jpg()
     glfw.terminate()
 
 
